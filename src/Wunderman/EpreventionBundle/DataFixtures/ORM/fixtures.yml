@@ -1,0 +1,4 @@
+Wunderman\EpreventionBundle\Entity\Task:
+    user{1..100}:
+        task: 'Task<current()>'
+        estimation: '<current()>'
