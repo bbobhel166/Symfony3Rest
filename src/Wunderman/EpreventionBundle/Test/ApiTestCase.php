@@ -89,7 +89,6 @@ class ApiTestCase extends KernelTestCase
 
     protected function onNotSuccessfulTest(Exception $e)
     {
-
         if (self::$history && $lastResponse = self::$history->getLastResponse()) {
             $this->printDebug('');
             $this->printDebug('<error>Failure!</error> when making the following request:');

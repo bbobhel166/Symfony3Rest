@@ -12,6 +12,7 @@ use Wunderman\EpreventionBundle\Entity\Metier;
 use Wunderman\EpreventionBundle\Form\MetierType;
 
 
+use FOS\RestBundle\View\View; // FOSRestBundle view to add location for post
 
 class MetierController extends FOSRestController
 {
@@ -31,21 +32,33 @@ class MetierController extends FOSRestController
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($metier);
             $em->flush();
-            return $metier;
+
+            // Create specific FOSRestBundle view response to include location header
+            $view = View::create($metier);
+            $view->setFormat('json');
+
+            // Set location header
+            $location = $this->generateUrl(
+                'wunderman_eprevention_api_metier_show',
+                ['code' => $metier->getCode()]
+            );
+            $view->setLocation($location);
+
+            return $view;
+            //return $metier;
         } else {
             return $form;
         }
     }
 
     /**
-     * @Rest\Get("/api/metiers/{id}")
-     * @Rest\Post("/api/metiers")
+     * @Rest\Get("/api/metiers/{code}")
      */
-    public function showAction($id)
+    public function showAction($code)
     {
         $metier = $this->getDoctrine()
             ->getRepository('EpreventionBundle:Metier')
-            ->findOneById($id);
+            ->findOneByCode($code);
 
         if (!$metier) {
             throw $this->createNotFoundException(sprintf(

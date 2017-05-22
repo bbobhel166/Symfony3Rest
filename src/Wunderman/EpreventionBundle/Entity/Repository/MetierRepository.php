@@ -27,11 +27,11 @@ class MetierRepository extends EntityRepository
     }
 
     /**
-     * @param $nickname
-     * @return Programmer
+     * @param $code
+     * @return Metier
      */
-    public function findOneById($id)
+    public function findOneById($code)
     {
-        return $this->findOneBy(array('id' => $id));
+        return $this->findOneBy(array('code' => $code));
     }
 }

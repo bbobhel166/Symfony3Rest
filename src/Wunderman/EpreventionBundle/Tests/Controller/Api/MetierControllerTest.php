@@ -1,35 +1,62 @@
 <?php
 namespace Wunderman\EpreventionBundle\Tests\Controller\Api;
 
+use Wunderman\EpreventionBundle\Entity\Metier;
 use Wunderman\EpreventionBundle\Test\ApiTestCase;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class MetierControllerTest extends ApiTestCase
 {
+
+    private $metier;
+
+    public function __construct()
+    {
+        $this->metier = array(
+            'titre' => 'nouveau premier métier',
+            'code' => 'm001'
+        );
+    }
+
     protected function setUp()
     {
         parent::setUp();
     }
 
+    protected function createMetier()
+    {
+        $data = $this->metier;
+
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $metier = new Metier();
+        foreach ($data as $key => $value) {
+            $accessor->setValue($metier, $key, $value);
+        }
+
+        $this->getEntityManager()->persist($metier);
+        $this->getEntityManager()->flush();
+
+        return $metier;
+    }
+
     public function testPOST()
     {
         // Form (fields, data)
-        $data = array(
-            'titre' => 'nouveau métier',
-            'code' => 1000,
-           // 'remote_id' => '2000'
-        );
+        $data = $this->metier;
 
         // 1) Create a metier
         $response = $this->client->post('/api/metiers', [
             'body' => json_encode($data)
         ]);
 
-        // 1) Check creation success
+        // 1) Check creation success (status code + location header)
         $this->assertEquals(201, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Location'));
+        $this->assertStringEndsWith('/api/metiers/m001', $response->getHeader('Location'));
         // get response body
         $finishedData = json_decode($response->getBody(true), true);
 
-        //2)  Check response fields list (same list as setup in $data)
+        //2)  Check response fields list (same list as setup in $data + ID)
         $this->assertArrayHasKey('id', $finishedData);
         foreach ($data as $key => $value){
             $this->assertArrayHasKey($key, $finishedData);
@@ -44,16 +71,18 @@ class MetierControllerTest extends ApiTestCase
 
     public function testGETMetier()
     {
-        /*
-        $response = $this->client->get('/api/metiers/1');
+        // create métier
+        $this->createMetier();
+
+        $response = $this->client->get('/api/metiers/m001');
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'titre',
             'code',
         ));
-        $this->asserter()->assertResponsePropertyEquals($response, 'titre', 'nouveau métier');
-        */
+        $this->asserter()->assertResponsePropertyEquals($response, 'titre', 'nouveau premier métier');
+
         /*
         $this->asserter()->assertResponsePropertyEquals(
             $response,
@@ -69,8 +98,7 @@ class MetierControllerTest extends ApiTestCase
          */
         $data = array(
             'titre' => '',
-            'code' => '',
-            //'remote_id' => ''
+            'code' => ''
         );
 
         $response = $this->client->post('/api/metiers', [
