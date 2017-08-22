@@ -37,8 +37,14 @@ class MetierController extends FOSRestController
             $em = $this->get('doctrine.orm.entity_manager');
 
             // Add user
+            /*
             $user = $em->getRepository('EpreventionBundle:User')
                 ->findOneBy(['email' => 'boris.helvas@kertios.com']);
+            */
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->find('1');
+
             $metier->setUsers($user);
 
             $em->persist($metier);
@@ -90,7 +96,7 @@ class MetierController extends FOSRestController
     /**
      *
      * @Rest\Get("/api/metiers")
-     * @Rest\View(serializerGroups={"Default", "ListMetier"})
+     * @Rest\View(serializerGroups={"Default", "details", "ListMetier"})
      */
     public function listAction(Request $request)
     {

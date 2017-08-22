@@ -18,6 +18,14 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="Wunderman\EpreventionBundle\Entity\Repository\TaskRepository")
  * @ORM\Table(name="task")}
  * @Serializer\ExclusionPolicy("all")
+ * @UniqueEntity(
+ *     fields={"task"},
+ *     message="This task is already in use"
+ * )
+ * @UniqueEntity(
+ *     fields={"estimation"},
+ *     message="This estimation is already in use"
+ * )
  */
 class Task
 {
@@ -45,13 +53,13 @@ class Task
     private $estimation;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @Serializer\Expose()
      */
     private $start;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @Serializer\Expose()
      */
     private $end;

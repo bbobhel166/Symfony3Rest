@@ -25,6 +25,8 @@ class TaskController extends FOSRestController
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
+        //var_dump($request->request->all()); die();
+
         $form->submit($request->request->all()); // Validation des données
 
         if ($form->isValid()) {

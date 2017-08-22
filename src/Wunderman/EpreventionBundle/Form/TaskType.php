@@ -20,7 +20,8 @@ class TaskType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Wunderman\EpreventionBundle\Entity\Task',
-            'csrf_protection' => false
+            'csrf_protection' => false,
+            'allow_extra_fields' => true,
         ]);
     }
 
