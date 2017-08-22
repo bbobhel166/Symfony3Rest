@@ -11,6 +11,7 @@ namespace Wunderman\EpreventionBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 
@@ -35,7 +36,7 @@ class Metier
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      * @Serializer\Expose()
-     * @Serializer\Groups({"details"})
+     * @Serializer\Groups({"ListMetier"})
      */
     private $id;
 
@@ -43,7 +44,7 @@ class Metier
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter a clever title")
      * @Serializer\Expose()
-     * @Serializer\Groups({"list"})
+     * @Serializer\Groups({"ListMetier"})
      */
     private $titre;
 
@@ -51,7 +52,7 @@ class Metier
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter a clever code")
      * @Serializer\Expose()
-     * @Serializer\Groups({"list"})
+     * @Serializer\Groups({"ListMetier"})
      */
     private $code;
 
@@ -60,6 +61,20 @@ class Metier
      * @Serializer\Exclude()
      */
     private $remote_id;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="metiers", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="metier_user")
+     * @Assert\NotBlank(message="Please enter a clever user")
+     * @Serializer\Expose()
+     * @Serializer\Groups({"ListMetier", "details"})
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -125,6 +140,22 @@ class Metier
     public function setRemoteId($remote_id)
     {
         $this->remote_id = $remote_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param mixed $users
+     */
+    public function setUsers($users)
+    {
+        $this->users[] = $users;
     }
 
 

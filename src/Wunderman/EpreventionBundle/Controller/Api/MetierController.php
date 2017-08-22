@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les anno
 use JMS\Serializer\Annotation as Serializer;
 
 use Wunderman\EpreventionBundle\Entity\Metier;
+use Wunderman\EpreventionBundle\Entity\User;
 use Wunderman\EpreventionBundle\Form\MetierType;
 
 
@@ -23,13 +24,23 @@ class MetierController extends FOSRestController
      */
     public function newAction(Request $request)
     {
+
         $metier = new Metier();
         $form = $this->createForm(MetierType::class, $metier);
+
+
 
         $form->submit($request->request->all()); // Validation des données
 
         if ($form->isValid()) {
+
             $em = $this->get('doctrine.orm.entity_manager');
+
+            // Add user
+            $user = $em->getRepository('EpreventionBundle:User')
+                ->findOneBy(['email' => 'boris.helvas@kertios.com']);
+            $metier->setUsers($user);
+
             $em->persist($metier);
             $em->flush();
 
@@ -38,21 +49,27 @@ class MetierController extends FOSRestController
             $view->setFormat('json');
 
             // Set location header
+            /*
             $location = $this->generateUrl(
                 'wunderman_eprevention_api_metier_show',
                 ['code' => $metier->getCode()]
             );
             $view->setLocation($location);
+            */
 
             return $view;
             //return $metier;
         } else {
+
+
+
             return $form;
         }
     }
 
     /**
      * @Rest\Get("/api/metiers/{code}")
+     * @Rest\View(serializerGroups={"Default", "details"})
      */
     public function showAction($code)
     {
@@ -73,11 +90,11 @@ class MetierController extends FOSRestController
     /**
      *
      * @Rest\Get("/api/metiers")
-     * @Rest\View(serializerGroups={"Default", "list"})
+     * @Rest\View(serializerGroups={"Default", "ListMetier"})
      */
     public function listAction(Request $request)
     {
-         $filter = $request->query->get('filter');
+        $filter = $request->query->get('filter');
 
         $qb = $this->getDoctrine()
             ->getRepository('EpreventionBundle:Metier')

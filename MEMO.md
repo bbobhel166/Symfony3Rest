@@ -13,6 +13,7 @@ To INSTALL projectsmanager :
 TO INSTALL test environement
 - php bin/console  doctrine:database:create --env=test
 - php bin/console  doctrine:schema:create --env=test
+- php bin/console doctrine:schema:update --env=test --force
 - update <env name="TEST_BASE_URL" value="http://XXXXXX.local" />
 
 
