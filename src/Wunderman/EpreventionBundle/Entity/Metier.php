@@ -36,7 +36,7 @@ class Metier
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      * @Serializer\Expose()
-     * @Serializer\Groups({"details"})
+     * @Serializer\Groups({"metieruser"})
      */
     private $id;
 
@@ -44,7 +44,7 @@ class Metier
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter a clever title")
      * @Serializer\Expose()
-     * @Serializer\Groups({"list"})
+     * @Serializer\Groups({"metieruser"})
      */
     private $titre;
 
@@ -52,7 +52,7 @@ class Metier
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Please enter a clever code")
      * @Serializer\Expose()
-     * @Serializer\Groups({"list"})
+     * @Serializer\Groups({"metieruser"})
      */
     private $code;
 
@@ -67,7 +67,7 @@ class Metier
      * @ORM\JoinTable(name="metier_user")
      * @Assert\NotBlank(message="Please enter a clever user")
      * @Serializer\Expose()
-     * @Serializer\Groups({"ListMetier", "details"})
+     * @Serializer\Groups({"metieruser"})
      */
     private $users;
 

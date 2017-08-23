@@ -23,12 +23,27 @@ class User extends BaseUser implements UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      * @Serializer\Expose()
-     * @Serializer\Groups({"metieruser", "details"})
+     * @Serializer\Groups({"metieruser"})
      */
     protected $id;
 
     /**
+     * @var string
+     * @Serializer\Expose()
+     * @Serializer\Groups({"metieruser"})
+     */
+    protected $username;
+
+    /**
+     * Encrypted password. Must be persisted.
+     * @Serializer\Groups({"details"})
+     * @var string
+     */
+    protected $password;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Metier", mappedBy="users")
+     * @Serializer\Groups({"metieruser"})
      */
     private $metiers;
 

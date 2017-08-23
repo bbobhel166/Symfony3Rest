@@ -37,10 +37,6 @@ class MetierController extends FOSRestController
             $em = $this->get('doctrine.orm.entity_manager');
 
             // Add user
-            /*
-            $user = $em->getRepository('EpreventionBundle:User')
-                ->findOneBy(['email' => 'boris.helvas@kertios.com']);
-            */
             $user = $this->getDoctrine()
                 ->getRepository(User::class)
                 ->find('1');
@@ -55,27 +51,22 @@ class MetierController extends FOSRestController
             $view->setFormat('json');
 
             // Set location header
-            /*
             $location = $this->generateUrl(
                 'wunderman_eprevention_api_metier_show',
                 ['code' => $metier->getCode()]
             );
             $view->setLocation($location);
-            */
 
             return $view;
             //return $metier;
         } else {
-
-
-
             return $form;
         }
     }
 
     /**
      * @Rest\Get("/api/metiers/{code}")
-     * @Rest\View(serializerGroups={"Default", "details"})
+     * @Rest\View(serializerGroups={"metieruser"})
      */
     public function showAction($code)
     {
@@ -96,7 +87,7 @@ class MetierController extends FOSRestController
     /**
      *
      * @Rest\Get("/api/metiers")
-     * @Rest\View(serializerGroups={"Default", "details", "ListMetier"})
+     * @Rest\View(serializerGroups={"Default", "metieruser"})
      */
     public function listAction(Request $request)
     {
